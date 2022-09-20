@@ -15,7 +15,7 @@ const MatchList = (props: MatchListProps) => {
         setMatchList(matchIds.map<JSX.Element>((matchId, index) => {
             return <Match key={"match" + index} summoner={props.summoner} id={matchId}/>
         }));
-    }, [matchIds, props.summoner.puuid]);
+    }, [matchIds, props.summoner, props.summoner.puuid]);
 
     return <ul className="list-group">
         {matchList}

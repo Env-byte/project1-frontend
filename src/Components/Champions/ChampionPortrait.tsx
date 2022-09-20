@@ -35,7 +35,7 @@ export const ChampionPortrait = (props: ChampionPortraitProps) => {
             }
         }
         return temp;
-    }, [props.items, props.tftSet, setData]);
+    }, [id, props.items, props.tftSet, setData]);
 
     if (!champion) {
         return <div className="champion-portrait"><p>Champion Id not found: {props.characterId}</p></div>

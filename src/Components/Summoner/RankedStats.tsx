@@ -1,6 +1,5 @@
 import React from "react";
 import {Summoner} from "../../Types/Api/Summoner";
-import {useLeagues} from "../../Hooks/Leagues";
 import {League} from "../../Types/Api/League";
 
 interface RankedStatsProps {
