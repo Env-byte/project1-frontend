@@ -1,0 +1,66 @@
+name: Build Publish
+
+on:
+  push:
+    branches:
+      - master
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v2
+
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate build
+        env:
+          CI: false
+        run: npm run build
+
+      # Share artifact inside workflow
+      - name: Upload Build
+        uses: actions/upload-artifact@v1
+        with:
+          name: react-build
+          path: build
+
+  deploy:
+    runs-on: ubuntu-latest
+    # When application is successfully tested and build has been generated
+    # Then we can start with deployment
+    needs: build
+    steps:
+      # Download previously shared build
+      - name: Get Build
+        uses: actions/download-artifact@v1
+        with:
+          name: react-build
+          path: ./build
+
+      # Set the credentials from repository settings/secrets
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+
+      # Copy the files from build folder to the S3 bucket
+      - name: Run Deploy
+        run: |
+            aws s3 sync ./build/ s3://tomproject1fe --delete --sse=AES256
+            response=$(aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }} --paths '/*')
+            
+            id=$(echo $response | grep "Id" | awk -F'"' '{ print $4 }')
+            
+            echo $response
+            echo $id
