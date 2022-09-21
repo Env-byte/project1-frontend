@@ -6,9 +6,7 @@ interface HeaderData {
 }
 
 export default class Client {
-
-    //public static apiPrefix = "https://localhost:7203";
-    public static ApiPrefix = "https://project.api.tompenn.co.uk";
+    public static ApiPrefix = process.env.REACT_APP_API_URL;
 
     //called on every request
     private static getHeader(data?: HeaderData) {
@@ -53,5 +51,5 @@ export default class Client {
 }
 
 export class ContentClient extends Client {
-    public static ApiPrefix = "https://content.tompenn.co.uk";
+    public static ApiPrefix = process.env.REACT_APP_CONTENT_URL;
 }
