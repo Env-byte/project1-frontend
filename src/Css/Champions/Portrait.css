@@ -1,31 +1,30 @@
 .champion-portrait > img {
-    width: 50px;
-    height: 50px;
+    width: 100%;
     border-radius: 4%;
     border: solid 2px black;
 }
 
-.champion-portrait {
-    width: 50px;
+.flex-container .champion-portrait {
+    width: 7%;
     display: inline-block;
     margin: 5px;
+    margin-bottom: 20px;
 }
 
-.champion-portrait .item-holder {
-    width: 15px;
-    height: 15px;
-    background: rgba(128, 128, 128, 0.3);
-    border: solid 1px rgba(0, 0, 0, 0.9);
-    border-radius: 10%;
+@media (max-width: 575.98px) {
+    .flex-container .champion-portrait {
+        width: 17.1%;
+    }
 }
 
-.champion-portrait .item-holder.empty {
-    border: solid 1px transparent;
-    background: transparent;
+@media (max-width: 767.98px) {
+    .flex-container .champion-portrait {
+        width: 20%;
+    }
 }
 
-.flex-container {
-    display: flex;
-    width: 100%;
-    margin-top: -15%;
+@media (max-width: 1259.98px) {
+    .flex-container .champion-portrait {
+        width: 12.4%;
+    }
 }

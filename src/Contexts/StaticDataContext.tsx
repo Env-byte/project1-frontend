@@ -1,6 +1,7 @@
-import React, {useContext} from "react";
+import React, {useContext, useMemo} from "react";
 import Loading from "../Components/Loading";
 import {StaticDataWrapper, useStaticDataWrapper} from "../Hooks/StaticDataWrapper";
+import {StaticData} from "../Classes/StaticData";
 
 const StaticDataContext = React.createContext<StaticDataWrapper>({});
 
@@ -25,6 +26,12 @@ export const StaticDataProvider = (props: StaticDataProviderProps) => {
 }
 
 export const useStaticData = () => {
-    const StaticData = useContext(StaticDataContext)
-    return {StaticData}
+    const staticData = useContext(StaticDataContext)
+    return {staticData}
+}
+export const useStaticDataSet = (tftSet:string) =>{
+    const {staticData} = useStaticData();
+    return useMemo<StaticData>(() => {
+        return staticData[tftSet];
+    }, [staticData, tftSet]);
 }

@@ -60,10 +60,10 @@ const Header = () => {
 
     return (
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-            <Container>
+            <Container fluid={true}>
                 <Navbar.Brand>
                     <Link style={{color: "white", textDecoration: "none"}} to='/'>
-                        React-Bootstrap
+                        Project 1
                     </Link>
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
