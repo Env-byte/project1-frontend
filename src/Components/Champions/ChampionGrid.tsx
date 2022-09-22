@@ -13,6 +13,7 @@ interface ChampionGridProps {
 }
 
 const ChampionGrid = (props: ChampionGridProps) => {
+    console.log('filterRes', props.filterRes)
     const [championPortraits, setChampionPortraits] = useState<JSX.Element[]>([]);
 
     useEffect(() => {

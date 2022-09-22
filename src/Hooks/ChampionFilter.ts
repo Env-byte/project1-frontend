@@ -1,10 +1,10 @@
-import {useReducer} from "react";
+import {useEffect, useReducer} from "react";
 import {Champion} from "../Types/Api/Champion";
 import {useStaticDataSet} from "../Contexts/StaticDataContext";
 import {Trait} from "../Types/Api/Trait";
 import StaticHelpers from "../Classes/StaticHelpers";
 
-type ActionType = 'remove' | 'add' | 'search';
+type ActionType = 'remove' | 'add' | 'search' | 'reset';
 
 export interface ChampionFilter {
     cost: number[]
@@ -33,6 +33,12 @@ export interface FilterDispatches {
 
 export const useChampionFilter = (tftSet: string): [FilterResponse, FilterDispatches] => {
     const setData = useStaticDataSet(tftSet)
+    const defaultFilter = {
+        cost: [],
+        origin: [],
+        class: [],
+        isSearch: false
+    };
 
     const reducer = (state: FilterResponse, action: Action) => {
         let filter
@@ -73,14 +79,13 @@ export const useChampionFilter = (tftSet: string): [FilterResponse, FilterDispat
                     filter: filter,
                     champions: applyFilter(filter, searchChampion(action.search, setData.getChampions())),
                 };
+            case'reset':
+                return {
+                    filter: defaultFilter,
+                    champions: applyFilter(defaultFilter, setData.getChampions())
+                }
         }
     }
-    const defaultFilter = {
-        cost: [],
-        origin: [],
-        class: [],
-        isSearch: false
-    };
     const [state, dispatch] = useReducer(reducer, {
         filter: defaultFilter,
         champions: applyFilter(defaultFilter, setData.getChampions())
@@ -105,7 +110,17 @@ export const useChampionFilter = (tftSet: string): [FilterResponse, FilterDispat
             action: "search",
             search: search
         })
+    };
+    const reset = () => {
+        dispatch({
+            action: "reset"
+        })
     }
+
+    //reset if tft set changes
+    useEffect(() => {
+        reset();
+    }, [tftSet])
 
     return [state, {add, remove, search}];
 }

@@ -6,7 +6,7 @@ import ChampionGrid from "../Champions/ChampionGrid";
 const Champions = () => {
     const {tftSet} = useTFTSet();
     const [filterRes, dispatches] = useChampionFilter(tftSet.id);
-    return  <>
+    return <>
         <div className="row">
             <div className="col-lg-12">
                 <h3>Champions</h3>

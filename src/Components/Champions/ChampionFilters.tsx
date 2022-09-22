@@ -12,7 +12,6 @@ interface ChampionFiltersProps {
 }
 
 const ChampionFilters = (props: ChampionFiltersProps) => {
-    console.log(props)
     const setData = useStaticDataSet(props.tftSet)
 
     const origins: Trait[] = useMemo<Trait[]>(() => setData.getTraits().filter((item => item.type === 'origin')), [setData]);
