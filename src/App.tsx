@@ -18,19 +18,20 @@ function App() {
     return (
         <>
             <React.StrictMode>
-                <div className="container-fluid">
-                    <UserProvider>
-                        <GoogleOAuthProvider clientId={GoogleClientId}>
-                            <StaticDataProvider>
-                                <TFTSetProvider>
-                                    <Header/>
+                <UserProvider>
+                    <GoogleOAuthProvider clientId={GoogleClientId}>
+                        <StaticDataProvider>
+                            <TFTSetProvider>
+                                <Header/>
+                                <div className="container-fluid">
+
                                     <br/>
                                     <AppRoutes/>
-                                </TFTSetProvider>
-                            </StaticDataProvider>
-                        </GoogleOAuthProvider>
-                    </UserProvider>
-                </div>
+                                </div>
+                            </TFTSetProvider>
+                        </StaticDataProvider>
+                    </GoogleOAuthProvider>
+                </UserProvider>
             </React.StrictMode>
             <Footer/>
         </>
