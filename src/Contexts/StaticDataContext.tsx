@@ -1,6 +1,8 @@
-import React, {useContext} from "react";
+import React, {useContext, useMemo} from "react";
 import Loading from "../Components/Loading";
 import {StaticDataWrapper, useStaticDataWrapper} from "../Hooks/StaticDataWrapper";
+import {StaticData} from "../Classes/StaticData";
+import ContentServer from "../Components/ErrorStates/ContentServer";
 
 const StaticDataContext = React.createContext<StaticDataWrapper>({});
 
@@ -9,22 +11,28 @@ interface StaticDataProviderProps {
 }
 
 export const StaticDataProvider = (props: StaticDataProviderProps) => {
-    const {TFTSetData, loaded} = useStaticDataWrapper()
+    const {tftSetData, loaded} = useStaticDataWrapper()
 
-    if (!TFTSetData) {
-        return <p>Error Loading Page</p>
-    }
-
-    if (!loaded) {
+    if (loaded === false) {
         return <Loading size={'4x'} screen={true}/>
     }
+    
+    if (loaded === null) {
+        return <ContentServer/>
+    }
 
-    return <StaticDataContext.Provider value={TFTSetData}>
+    return <StaticDataContext.Provider value={tftSetData}>
         {props.children}
     </StaticDataContext.Provider>
 }
 
 export const useStaticData = () => {
-    const StaticData = useContext(StaticDataContext)
-    return {StaticData}
+    const staticData = useContext(StaticDataContext)
+    return {staticData}
+}
+export const useStaticDataSet = (tftSet: string) => {
+    const {staticData} = useStaticData();
+    return useMemo<StaticData>(() => {
+        return staticData[tftSet];
+    }, [staticData, tftSet]);
 }

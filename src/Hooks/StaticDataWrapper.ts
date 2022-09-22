@@ -8,8 +8,8 @@ const setNumbers: string[] = ['TFTSet7', 'TFTSet7_2']
 export type StaticDataWrapper = Record<string, StaticData>;
 
 export function useStaticDataWrapper() {
-    const [loaded, setLoaded] = useState<boolean>(false);
-    const [TFTSetData, setTFTSetData] = useState<StaticDataWrapper>();
+    const [loaded, setLoaded] = useState<boolean | null>(false);
+    const [tftSetData, setTFTSetData] = useState<StaticDataWrapper>({});
     useEffect(() => {
         if (!loaded) {
             loadAll()
@@ -17,10 +17,13 @@ export function useStaticDataWrapper() {
                     setTFTSetData(TFTSets)
                     setLoaded(true);
                 })
-                .catch(ErrorHandler.Catch)
+                .catch((e) => {
+                    setLoaded(null);
+                    ErrorHandler.Catch(e)
+                })
         }
     })
-    return {TFTSetData, loaded};
+    return {tftSetData, loaded};
 }
 
 function loadAll(): Promise<Record<string, StaticData>> {

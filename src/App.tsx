@@ -17,19 +17,21 @@ ReactGA.initialize(TRACKING_ID);
 function App() {
     return (
         <>
-            <UserProvider>
-                <GoogleOAuthProvider clientId={GoogleClientId}>
-                    <StaticDataProvider>
-                        <TFTSetProvider>
-                            <Header/>
-                            <br/>
-                            <div className="container-fluid">
-                                <AppRoutes/>
-                            </div>
-                        </TFTSetProvider>
-                    </StaticDataProvider>
-                </GoogleOAuthProvider>
-            </UserProvider>
+            <React.StrictMode>
+                <div className="container-fluid">
+                    <UserProvider>
+                        <GoogleOAuthProvider clientId={GoogleClientId}>
+                            <StaticDataProvider>
+                                <TFTSetProvider>
+                                    <Header/>
+                                    <br/>
+                                    <AppRoutes/>
+                                </TFTSetProvider>
+                            </StaticDataProvider>
+                        </GoogleOAuthProvider>
+                    </UserProvider>
+                </div>
+            </React.StrictMode>
             <Footer/>
         </>
     );
