@@ -40,7 +40,7 @@ export const ChampionPortrait = (props: ChampionPortraitProps) => {
     return <div className="champion-portrait">
         <img alt={champion.name}
              src={ContentClient.ApiPrefix + "/" + props.tftSet + "/champions/" + encodeURIComponent(champion.name.replace('\'', '')) + ".png"}/>
-        <div className="flex-container">
+        <div className="flex-container item-row">
             {items}
         </div>
     </div>;

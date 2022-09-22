@@ -29,7 +29,7 @@ const ChampionGrid = (props: ChampionGridProps) => {
             {props.children}
             {(props.showActiveFilters !== false) ?
                 <ActiveFilters filter={props.filterRes.filter} dispatches={props.dispatches}/> : <></>}
-            <div className="Champion-grid">
+            <div className="flex-container champion-grid">
                 {(championPortraits.length === 0) ? <p>No Champions found. Try Adjusting search</p> : championPortraits}
             </div>
         </div>

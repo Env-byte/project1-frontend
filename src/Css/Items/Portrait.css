@@ -1,9 +1,22 @@
 .item-holder > img {
     width: 100%;
-    margin-top: -15px;
 }
 
 .item-holder {
     width: 100%;
     margin-left: 1px;
+}
+
+.item-row {
+    margin-top: -15px;
+}
+
+.item-row .item-holder {
+    width: 28%;
+    height: fit-content;
+    margin: 2.5%;
+}
+
+.item-row .item-holder.empty {
+    background: transparent;
 }
