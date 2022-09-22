@@ -16,7 +16,7 @@ export const StaticDataProvider = (props: StaticDataProviderProps) => {
     if (loaded === false) {
         return <Loading size={'4x'} screen={true}/>
     }
-    
+
     if (loaded === null) {
         return <ContentServer/>
     }

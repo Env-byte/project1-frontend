@@ -56,7 +56,7 @@ const Match = (props: MatchProps) => {
                 <h3>{StaticHelpers.Ordinal(player?.placement)}</h3>
             </div>
             <div className="col-lg-11">
-                <div style={{display: "flex", flexWrap: "wrap"}}>
+                <div className="flex-container">
                     {unitPortraits}
                 </div>
             </div>

@@ -1,7 +1,6 @@
-import {useStaticData} from "../../Contexts/StaticDataContext";
+import {useStaticDataSet} from "../../Contexts/StaticDataContext";
 import {ContentClient} from "../../api/FetchWrapper";
 import {useId, useMemo} from "react";
-import {StaticData} from "../../Classes/StaticData";
 import {ItemPortrait} from "../Items/ItemPortrait";
 import "../../Css/Champions/Portrait.css"
 
@@ -12,17 +11,16 @@ export interface ChampionPortraitProps {
 }
 
 export const ChampionPortrait = (props: ChampionPortraitProps) => {
-    const {StaticData} = useStaticData();
     const id = useId();
-    const setData = useMemo<StaticData>(() => {
-        return StaticData[props.tftSet];
-    }, [props.tftSet, StaticData]);
+
+    const setData = useStaticDataSet(props.tftSet)
     const champion = useMemo(() => {
         if (setData) {
             return setData.getChampion(props.characterId);
         }
         return false;
     }, [props.characterId, setData]);
+
     let items: JSX.Element[] = useMemo(() => {
         let temp = [];
         if (props.items && setData) {
@@ -36,14 +34,13 @@ export const ChampionPortrait = (props: ChampionPortraitProps) => {
         }
         return temp;
     }, [id, props.items, props.tftSet, setData]);
-
     if (!champion) {
         return <div className="champion-portrait"><p>Champion Id not found: {props.characterId}</p></div>
     }
     return <div className="champion-portrait">
         <img alt={champion.name}
              src={ContentClient.ApiPrefix + "/" + props.tftSet + "/champions/" + encodeURIComponent(champion.name.replace('\'', '')) + ".png"}/>
-        <div className="flex-container">
+        <div className="flex-container item-row">
             {items}
         </div>
     </div>;
