@@ -14,6 +14,8 @@ const GoogleClientId = "67743149875-uqngf9h1t0dhveklcs7ouphmpenepeqg.apps.google
 
 ReactGA.initialize(TRACKING_ID);
 
+
+
 function App() {
     return (
         <>
@@ -23,11 +25,8 @@ function App() {
                         <StaticDataProvider>
                             <TFTSetProvider>
                                 <Header/>
-                                <div className="container-fluid">
-
-                                    <br/>
-                                    <AppRoutes/>
-                                </div>
+                                <br/>
+                                <AppRoutes/>
                             </TFTSetProvider>
                         </StaticDataProvider>
                     </GoogleOAuthProvider>
