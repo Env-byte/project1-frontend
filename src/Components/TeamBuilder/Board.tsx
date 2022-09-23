@@ -1,4 +1,4 @@
-import "../../css/TeamBuilder/Board.css"
+import "../../Css/TeamBuilder/Board.css"
 import Hex from "./Hex";
 import {useEffect, useState} from "react";
 
