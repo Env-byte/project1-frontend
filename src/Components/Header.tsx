@@ -76,7 +76,7 @@ const Header = () => {
                             <Link className="nav-link active" to='/champions'>Champions</Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <Link className="nav-link active" to='/team-builder'>Team Builder</Link>
+                            <Link className="nav-link active" to='/teams'>Team Builder</Link>
                         </Nav.Item>
 
                     </Nav>
