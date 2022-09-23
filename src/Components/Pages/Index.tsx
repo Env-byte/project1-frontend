@@ -20,7 +20,7 @@ const Index = () => {
             <SummonerCard region={item.region} name={item.name} key={"summoner" + item.name}/>
         </div>)
     }, []);
-    return <div className="index">
+    return <div className="container-fluid">
         <div className="row mb-2">
             <div className="col-lg-10 offset-lg-2">
                 <h4>Example profiles: </h4>
