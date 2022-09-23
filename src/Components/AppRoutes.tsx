@@ -3,8 +3,9 @@ import {useEffect} from "react";
 import ReactGA from "react-ga";
 import Champions from "./Pages/Champions";
 import Summoner from "./Pages/Summoner";
-import TeamBuilder from "./Pages/TeamBuilder";
+import Builder from "./Pages/Builder";
 import Index from "./Pages/Index";
+import Teams from "./Pages/Teams";
 
 const AppRoutes = () => {
     useEffect(() => {
@@ -14,7 +15,8 @@ const AppRoutes = () => {
         <Routes>
             <Route path='/' element={<Index/>}/>
             <Route path='/champions' element={<Champions/>}/>
-            <Route path='/team-builder' element={<TeamBuilder/>}/>
+            <Route path='/teams/builder/:id' element={<Builder/>}/>
+            <Route path='/teams' element={<Teams/>}/>
             <Route path={'/summoner/:region/:name'} element={<Summoner/>}/>
         </Routes>
     );
