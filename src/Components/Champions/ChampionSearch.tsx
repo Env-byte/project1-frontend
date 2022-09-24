@@ -30,6 +30,9 @@ const ChampionSearch = (props: ChampionSearchProps) => {
         const val = event.currentTarget.value;
         props.onSearch(val.trim());
     };
+    const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearch(event.target.value);
+    }
     return <>
         <div className="input-group mb-3">
             <span className="input-group-text" id="basic-addon1">
@@ -41,6 +44,7 @@ const ChampionSearch = (props: ChampionSearchProps) => {
                    placeholder="Search Champion name, Origin, Class, Cost"
                    aria-label="Username"
                    value={search}
+                   onChange={handleOnChange}
                    aria-describedby="basic-addon1"/>
         </div>
     </>
