@@ -2,9 +2,7 @@ import React, {useEffect, useState} from "react";
 import {findIconDefinition, IconDefinition, library} from "@fortawesome/fontawesome-svg-core";
 import {faSearch} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {ChampionFilter, FilterDispatches} from "../../Hooks/ChampionFilter";
-import {Simulate} from "react-dom/test-utils";
-import keyUp = Simulate.keyUp;
+import {ChampionFilter} from "../../Hooks/ChampionFilter";
 
 library.add(faSearch)
 
