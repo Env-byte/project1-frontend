@@ -28,7 +28,7 @@ const ChampionGrid = (props: ChampionGridProps) => {
         <div className="card-body">
             {props.children}
             {(props.showActiveFilters !== false) ?
-                <ActiveFilters filter={props.filterRes.filter} dispatches={props.dispatches}/> : <></>}
+                <ActiveFilters allowRemove={!props.filterRes.filter.isSearch} filter={props.filterRes.filter} dispatches={props.dispatches}/> : <></>}
             <div className="flex-container champion-grid">
                 {(championPortraits.length === 0) ? <p>No Champions found. Try Adjusting search</p> : championPortraits}
             </div>
