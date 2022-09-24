@@ -67,13 +67,17 @@ export const useChampionFilter = (tftSet: string): [FilterResponse, FilterDispat
                 filter.isSearch = false;
                 return {filter: filter, champions: applyFilter(filter, setData.getChampions())};
             case 'search':
-                if (!action.search) {
+                if (action.search === undefined) {
                     return state;
                 }
-                filter = {
-                    isSearch: true,
-                    cost: searchCost(action.search),
-                    ...searchTraits(action.search, setData.getTraits())
+                if (action.search === '') {
+                    filter = defaultFilter
+                } else {
+                    filter = {
+                        isSearch: true,
+                        cost: searchCost(action.search),
+                        ...searchTraits(action.search, setData.getTraits())
+                    }
                 }
                 return {
                     filter: filter,
