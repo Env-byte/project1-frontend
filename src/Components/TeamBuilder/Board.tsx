@@ -8,7 +8,7 @@ const Board = () => {
     useEffect(() => {
         const temp = [];
         for (let i = 0, iL = 28; i < iL; i++) {
-            temp.push(<Hex key={"hex" + i} position={i}/>)
+            temp.push(<Hex allowedDrop={true} key={"hex" + i} position={i}/>)
         }
         setHexes(temp);
     }, [])

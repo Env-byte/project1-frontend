@@ -8,12 +8,13 @@ import {StaticDataProvider} from "./Contexts/StaticDataContext";
 import {TFTSetProvider} from "./Contexts/TFTSetContext";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
+import {DndProvider} from "react-dnd";
+import {HTML5Backend} from "react-dnd-html5-backend";
 
 const TRACKING_ID = "G-5RBBT2SEP5"; // OUR_TRACKING_ID
 const GoogleClientId = "67743149875-uqngf9h1t0dhveklcs7ouphmpenepeqg.apps.googleusercontent.com";
 
 ReactGA.initialize(TRACKING_ID);
-
 
 
 function App() {
@@ -24,9 +25,11 @@ function App() {
                     <GoogleOAuthProvider clientId={GoogleClientId}>
                         <StaticDataProvider>
                             <TFTSetProvider>
-                                <Header/>
-                                <br/>
-                                <AppRoutes/>
+                                <DndProvider backend={HTML5Backend}>
+                                    <Header/>
+                                    <br/>
+                                    <AppRoutes/>
+                                </DndProvider>
                             </TFTSetProvider>
                         </StaticDataProvider>
                     </GoogleOAuthProvider>

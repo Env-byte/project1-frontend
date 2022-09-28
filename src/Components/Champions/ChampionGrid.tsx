@@ -10,6 +10,7 @@ interface ChampionGridProps {
     style?: CSSProperties,
     children?: JSX.Element,
     showActiveFilters?: boolean
+    useDrag?: boolean
 }
 
 const ChampionGrid = (props: ChampionGridProps) => {
@@ -18,11 +19,11 @@ const ChampionGrid = (props: ChampionGridProps) => {
     useEffect(() => {
         setChampionPortraits(
             props.filterRes.champions
-                .map((item) => <ChampionPortrait tftSet={props.tftSet}
+                .map((item) => <ChampionPortrait useDrag={props.useDrag} tftSet={props.tftSet}
                                                  key={"portrait-" + item.championId}
                                                  characterId={item.championId}/>
                 ));
-    }, [props.filterRes.champions, props.tftSet]);
+    }, [props.filterRes.champions, props.tftSet, props.useDrag]);
 
     return <div style={props.style} className="card">
         <div className="card-body">
