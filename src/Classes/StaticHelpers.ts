@@ -1,3 +1,5 @@
+import {ContentClient} from "../api/FetchWrapper";
+
 const english_ordinal_rules = new Intl.PluralRules("en", {type: "ordinal"});
 const suffixes: Record<string, string> = {
     one: "st",
@@ -30,6 +32,10 @@ export default class StaticHelpers {
             }, Object.create(Object.getPrototypeOf(source)))
         }
         return source
+    }
+
+    public static  championImage = (setId: string, name: string) => {
+        return ContentClient.ApiPrefix + "/" + setId + "/champions/" + encodeURIComponent(name.replace('\'', '')) + '.png';
     }
 
 }

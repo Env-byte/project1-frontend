@@ -8,16 +8,23 @@ import EquippedItems from "../TeamBuilder/EquippedItems";
 import OptionsBar from "../OptionsBar";
 import ChampionGrid from "../Champions/ChampionGrid";
 import ChampionSearch from "../Champions/ChampionSearch";
+import {useTeam} from "../../Hooks/TeamComp";
+import Loading from "../Loading";
 
 const Builder = () => {
     const urlParam = useParams();
     const [teamId, setTeamId] = useState<string>('');
+    const {tftSet} = useTFTSet();
+    const [filterRes, filterDispatches] = useChampionFilter(tftSet.id);
+    const [team, loading, teamDispatches] = useTeam(tftSet.id);
     useEffect(() => {
         setTeamId(urlParam.id as string);
     }, [urlParam])
-    const {tftSet} = useTFTSet();
-    const [filterRes, dispatches] = useChampionFilter(tftSet.id);
+
+    console.log(team)
+
     return <>
+        {loading ? <Loading size={'1x'} screen={true}/> : <></>}
         <div className="container-fluid">
             <div className="row">
                 <div className="col">
@@ -35,10 +42,10 @@ const Builder = () => {
                             </div>
                         </div>
                         <div className="col-lg-6">
-                            <Board/>
+                            <Board team={team} dispatches={teamDispatches}/>
                             <br/>
-                            <ChampionGrid filterRes={filterRes} dispatches={dispatches} tftSet={tftSet.id}>
-                                <ChampionSearch filter={filterRes.filter} onSearch={dispatches.search}
+                            <ChampionGrid useDrag={true} filterRes={filterRes} dispatches={filterDispatches} tftSet={tftSet.id}>
+                                <ChampionSearch filter={filterRes.filter} onSearch={filterDispatches.search}
                                                 tftSet={tftSet.id}/>
                             </ChampionGrid>
                         </div>

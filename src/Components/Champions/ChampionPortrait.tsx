@@ -4,7 +4,7 @@ import {useId, useMemo} from "react";
 import {ItemPortrait} from "../Items/ItemPortrait";
 import "../../Css/Champions/Portrait.css"
 import {DragSourceMonitor, useDrag} from "react-dnd";
-import {DropResult, ItemTypes} from "../../Types/DragDrop";
+import StaticHelpers from "../../Classes/StaticHelpers";
 
 export interface ChampionPortraitProps {
     characterId: string
@@ -17,10 +17,7 @@ export const ChampionPortrait = (props: ChampionPortraitProps) => {
     const id = useId();
     const setData = useStaticDataSet(props.tftSet)
     const champion = useMemo(() => {
-        if (setData) {
-            return setData.getChampion(props.characterId);
-        }
-        return false;
+        return setData.getChampion(props.characterId);
     }, [props.characterId, setData]);
 
     const [{opacity}, drag] = useDrag(
@@ -31,15 +28,12 @@ export const ChampionPortrait = (props: ChampionPortraitProps) => {
                 dropEffect: 'copy'
             },
             end(item, monitor) {
-                const dropResult = monitor.getDropResult() as DropResult
-                console.log('dropResult', dropResult);
-                console.log('item', item);
+                // const dropResult = monitor.getDropResult() as DropResult
             },
             collect: (monitor: DragSourceMonitor) => ({
                 opacity: monitor.isDragging() ? 0.4 : 1,
             }),
             canDrag: () => {
-                console.log('canDrag', props.useDrag)
                 return props.useDrag === true;
             }
         }),
@@ -64,7 +58,7 @@ export const ChampionPortrait = (props: ChampionPortraitProps) => {
     }
     return <div className="champion-portrait" ref={drag} style={{opacity}}>
         <img alt={champion.name}
-             src={ContentClient.ApiPrefix + "/" + props.tftSet + "/champions/" + encodeURIComponent(champion.name.replace('\'', '')) + ".png"}/>
+             src={StaticHelpers.championImage(props.tftSet, champion.name)}/>
         <div className="flex-container item-row">
             {items}
         </div>
