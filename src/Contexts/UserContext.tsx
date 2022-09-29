@@ -1,4 +1,4 @@
-import React, {Dispatch, useContext, useState} from 'react'
+import React, {Dispatch, useContext, useEffect, useState} from 'react'
 
 interface UserContextObj {
     user: UserAccount | null
@@ -19,5 +19,11 @@ export const UserProvider = (props: AuthProviderProps) => {
 }
 export const useUser = () => {
     const {user, setUser} = useContext(UserContext)
+    useEffect(() => {
+        let accessToken = localStorage.getItem('user-token');
+        if (accessToken) {
+            setUser({firstName: '', lastName: '', email: '', accessToken: accessToken})
+        }
+    }, [setUser])
     return {user, setUser}
 }

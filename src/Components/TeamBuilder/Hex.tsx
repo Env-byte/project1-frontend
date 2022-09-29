@@ -1,13 +1,15 @@
 import {useDrop} from "react-dnd";
 import {DropResult} from "../../Types/DragDrop";
-import {teamAdd, teamRemove} from "../../Hooks/TeamComp";
+import {TeamAdd, TeamRemove} from "../../Hooks/TeamComp";
 import {Champion} from "../../Types/Api/Champion";
 import StaticHelpers from "../../Classes/StaticHelpers";
+import {useMemo} from "react";
+import {useStaticDataSet} from "../../Contexts/StaticDataContext";
 
 interface HexProps {
     position: number,
-    add: teamAdd,
-    remove: teamRemove,
+    add: TeamAdd,
+    remove: TeamRemove,
     champion?: Champion
     setId: string
 }
@@ -46,7 +48,7 @@ const Hex = (props: HexProps) => {
     const isActive = canDrop && isOver
     const backgroundColor = selectBackgroundColor(isActive, canDrop)
     const image = props.champion && props.champion.name ?
-        'url("' + StaticHelpers.championImage(props.setId, props.champion.name) + '")'
+        'url("' + StaticHelpers.championImage(props.setId, props.champion?.name) + '")'
         : undefined;
 
     return <div ref={drop} style={{backgroundColor: backgroundColor, backgroundImage: image}} className="hex">

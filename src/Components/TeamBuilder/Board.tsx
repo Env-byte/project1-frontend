@@ -13,23 +13,19 @@ interface BoardProps {
 const Board = (props: BoardProps) => {
     const [hexes, setHexes] = useState<JSX.Element[]>([])
 
-    const hexRecord = useMemo(() => {
-        let map: Record<number, Champion> = {};
-        props.team.hexes.forEach((item, index) => {
-            map[item.hex] = item.champion
-        });
-        return map;
-    }, [props.team.hexes])
-
     useEffect(() => {
         const temp = [];
+        let hexRecord: Record<number, Champion> = {};
+        props.team.hexes.forEach((item, index) => {
+            hexRecord[item.position] = item.champion
+        });
 
         for (let i = 0, iL = 28; i < iL; i++) {
             temp.push(<Hex champion={hexRecord.hasOwnProperty(i) ? hexRecord[i] : undefined} key={"hex" + i} position={i}
                            add={props.dispatches.add} remove={props.dispatches.remove} setId={props.team.setId}/>)
         }
         setHexes(temp);
-    }, [hexRecord, props.dispatches.add, props.dispatches.remove, props.team.setId])
+    }, [props.team.hexes, props.dispatches.add, props.dispatches.remove, props.team.setId])
 
     return <div className="board four-row">
         {hexes}

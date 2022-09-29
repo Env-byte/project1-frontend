@@ -1,7 +1,7 @@
 import {Champion} from "./Api/Champion";
 
 export interface ChampionHex {
-    hex: number
+    position: number
     champion: Champion
 }
 

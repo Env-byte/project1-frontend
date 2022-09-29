@@ -2,7 +2,8 @@ import ErrorHandler from "../Classes/ErrorHandler";
 
 interface HeaderData {
     region?: string,
-    token?: string
+    token?: string,
+    contentType?: string
 }
 
 export default class Client {
@@ -13,7 +14,7 @@ export default class Client {
         return new Headers({
             'api-token': (data?.token) ?? "",
             'region': (data?.region) ?? "",
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Type': (data?.contentType) ?? 'application/x-www-form-urlencoded',
 
         });
     }
