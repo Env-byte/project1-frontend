@@ -3,5 +3,5 @@ export interface Champion {
     championId: string;
     cost: number;
     traits: string[];
-    items: []
+    items: number[]
 }
