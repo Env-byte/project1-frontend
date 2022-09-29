@@ -10,4 +10,5 @@ export interface Team {
     name: string
     setId: string
     isPublic: boolean
+    guuid: string | null
 }
