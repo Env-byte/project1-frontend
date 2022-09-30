@@ -1,12 +1,13 @@
 import {Champion} from "../Types/Api/Champion";
 import {Team} from "../Types/Team";
-import {useEffect, useMemo, useReducer} from "react";
+import {useEffect, useReducer, useState} from "react";
 import {useUser} from "../Contexts/UserContext";
 import StaticHelpers from "../Classes/StaticHelpers";
 import TeamClient from "../api/TeamClient";
 import ErrorHandler from "../Classes/ErrorHandler";
 import {ToastError} from "../Classes/SwalMixin";
 import {useStaticDataSet} from "../Contexts/StaticDataContext";
+import {StaticData} from "../Classes/StaticData";
 
 type ActionType = 'remove' | 'add' | 'saveOptions' | 'overwrite';
 
@@ -38,44 +39,44 @@ export interface TeamHookStatus {
 
 const defaultTeam = {hexes: [], name: "", setId: '', isPublic: false, guuid: null}
 
+const reducer = (state: Team, action: Action) => {
+    switch (action.action) {
+        case "add": {
+            const team = StaticHelpers.deepCopy(state);
+            if (action.champion && action.position) {
+                team.hexes.push({position: action.position, champion: action.champion})
+            }
+            return {...team}
+        }
+        case "remove": {
+            const team = StaticHelpers.deepCopy(state);
+            team.hexes = team.hexes.filter((item) => item.position !== action.position);
+            return {...team}
+        }
+        case "saveOptions":
+            let newName = state.name;
+            let isPublic = state.isPublic;
+            if (action.name) {
+                newName = action.name;
+            }
+            if (action.isPublic) {
+                isPublic = action.isPublic;
+            }
+            return {...state, name: newName, isPublic: isPublic}
+        case 'overwrite':
+            if (action.team) {
+                return {...action.team}
+            }
+            return {...state}
+    }
+}
+
 export const useTeam = (tftSet: string, teamId: string): [Team, TeamHookStatus, TeamDispatches] => {
     const {user} = useUser();
     const setData = useStaticDataSet(tftSet)
-    let loading = false;
-    let canSave = false;
-
-    const reducer = (state: Team, action: Action) => {
-        switch (action.action) {
-            case "add": {
-                const team = StaticHelpers.deepCopy(state);
-                if (action.champion && action.position) {
-                    team.hexes.push({position: action.position, champion: action.champion})
-                }
-                return {...team}
-            }
-            case "remove": {
-                const team = StaticHelpers.deepCopy(state);
-                team.hexes = team.hexes.filter((item) => item.position !== action.position);
-                return {...team}
-            }
-            case "saveOptions":
-                let newName = state.name;
-                let isPublic = state.isPublic;
-                if (action.name) {
-                    newName = action.name;
-                }
-                if (action.isPublic) {
-                    isPublic = action.isPublic;
-                }
-                return {...state, name: newName, isPublic: isPublic}
-            case 'overwrite':
-                if (action.team) {
-                    return {...action.team}
-                }
-                return {...state}
-        }
-    }
     const [state, dispatch] = useReducer(reducer, {...defaultTeam, setId: tftSet});
+    const [loading, setLoading] = useState<boolean>(false);
+    let canSave = false;
 
     const add = (champion: Champion, position: number) => {
         dispatch({action: "add", champion: champion, position: position})
@@ -86,39 +87,62 @@ export const useTeam = (tftSet: string, teamId: string): [Team, TeamHookStatus, 
     }
 
     const saveOptions = (name: string, isPublic: boolean) => {
-        if (user === null || user.accessToken === '') {
-            ToastError.fire('Can not save Team, you are not logged in.')
-            return;
-        }
-        if (!state.guuid) {
-            ToastError.fire('Can not save Team, invalid id.');
-            return;
-        }
-        loading = true;
-
-        TeamClient.UpdateOptions({name: name, isPublic: isPublic, guuid: state.guuid}, user.accessToken)
+        setLoading(true);
+        SaveOptionsHandle(user, state, name, isPublic)
             .then(() => {
                 dispatch({action: "saveOptions", name: name, isPublic: isPublic});
             })
-            .catch(ErrorHandler.Catch)
             .finally(() => {
-                loading = false;
-            });
+                setLoading(false);
+            })
     }
 
     const save = (callback?: (guuid: string) => void, name?: string, isPublic?: boolean) => {
-        console.log(user)
+        setLoading(true);
+        SaveHandle(user, state, name, isPublic)
+            .then((team) => {
+                dispatch({action: "overwrite", team: team})
+                if (typeof callback === "function") {
+                    callback(team.guuid ?? '')
+                }
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }
+
+    if (state.hexes.length > 0) {
+        canSave = true;
+    }
+
+    useEffect(() => {
+        setLoading(true);
+        GetHandle(user, teamId, setData)
+            .then((team) => {
+                dispatch({action: "overwrite", team: team})
+            })
+            .finally(() => {
+                setLoading(false);
+            })
+
+    }, [setData, teamId, user])
+
+    return [state, {loading, canSave}, {add, remove, save, saveOptions}]
+}
+
+const SaveHandle = (user: UserAccount | null, state: Team, name?: string, isPublic?: boolean): Promise<Team> => {
+    return new Promise((resolve, reject) => {
         if (user === null || user.accessToken === '') {
             ToastError.fire('Can not save Team, you are not logged in.')
+            reject();
             return;
         }
         let promise;
-        loading = true;
         if (state.guuid === null) {
             const team = StaticHelpers.deepCopy(state);
             if (name === undefined) {
-                loading = false;
                 ToastError.fire('Can not save Team, Name is not set.')
+                reject();
                 return;
             }
             if (isPublic === undefined) {
@@ -130,42 +154,50 @@ export const useTeam = (tftSet: string, teamId: string): [Team, TeamHookStatus, 
         }
         promise
             .then((team) => {
-                dispatch({action: "overwrite", team: team})
-                if (typeof callback === "function") {
-                    callback(team.guuid ?? '')
-                }
+                resolve(team);
             })
             .catch(ErrorHandler.Catch)
-            .finally(() => {
-                loading = false;
-            })
-    }
+    })
+}
 
-    if (state.hexes.length > 0) {
-        canSave = true;
-    }
-
-    useEffect(() => {
-        if (teamId !== 'new' && user && user.accessToken !== '') {
-            TeamClient.Get(teamId, user.accessToken)
-                .then((team) => {
-                    //make sure champion data is set correctly as it is not stored in db
-                    team.hexes = team.hexes.map(hex => {
-                        let champ = setData.getChampion(hex.champion.championId)
-                        if (champ) {
-                            hex.champion = champ;
-                        }
-                        return hex
-                    })
-                    dispatch({action: "overwrite", team: team})
-                })
-                .catch(ErrorHandler.Catch)
-                .finally(() => {
-
-                })
+const SaveOptionsHandle = (user: UserAccount | null, state: Team, name: string, isPublic: boolean) => {
+    return new Promise((resolve, reject) => {
+        if (user === null || user.accessToken === '') {
+            ToastError.fire('Can not save Team, you are not logged in.')
+            reject();
+            return;
         }
-    }, [teamId, user])
+        if (!state.guuid) {
+            ToastError.fire('Can not save Team, invalid id.');
+            reject();
+            return;
+        }
+        TeamClient.UpdateOptions({name: name, isPublic: isPublic, guuid: state.guuid}, user.accessToken)
+            .then(() => {
+                resolve(true);
+            })
+            .catch(ErrorHandler.Catch)
+    })
+}
 
-
-    return [state, {loading, canSave}, {add, remove, save, saveOptions}]
+const GetHandle = (user: UserAccount | null, teamId: string, setData: StaticData): Promise<Team> => {
+    return new Promise((resolve, reject) => {
+        if (teamId === '' || teamId === 'new' || user === null || user.accessToken === '') {
+            reject();
+            return;
+        }
+        TeamClient.Get(teamId, user.accessToken)
+            .then((team) => {
+                //make sure champion data is set correctly as it is not stored in db
+                team.hexes = team.hexes.map(hex => {
+                    let champ = setData.getChampion(hex.champion.championId)
+                    if (champ) {
+                        hex.champion = champ;
+                    }
+                    return hex
+                })
+                resolve(team);
+            })
+            .catch(ErrorHandler.Catch)
+    })
 }
