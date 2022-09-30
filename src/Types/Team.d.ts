@@ -11,4 +11,5 @@ export interface Team {
     setId: string
     isPublic: boolean
     guuid: string | null
+    isReadonly: boolean
 }

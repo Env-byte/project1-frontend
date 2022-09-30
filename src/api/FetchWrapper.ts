@@ -34,6 +34,15 @@ export default class Client {
         });
     }
 
+    public static async patch<TRequestBody, TResponseBody>(request: string, body: TRequestBody, data?: HeaderData): Promise<TResponseBody> {
+        return this.execFetch(this.ApiPrefix + request, {
+            method: 'patch',
+            headers: this.getHeader(data),
+            body: JSON.stringify(body)
+        });
+    }
+
+
     private static async execFetch<T>(url: string, init?: RequestInit): Promise<T> {
 
         const response = await fetch(url, init);

@@ -19,16 +19,6 @@ export default class TeamClient {
         );
     }
 
-    public static Update(team: Team, token: string): Promise<Team> {
-        return Client.post <Team, Team>(
-            '/api/team/update' + encodeURIComponent(team.guuid ?? ''),
-            team,
-            {
-                token: token
-            }
-        );
-    }
-
     public static Get(guuid: string, token: string): Promise<Team> {
         return Client.get <Team>(
             '/api/team/' + encodeURIComponent(guuid),
@@ -48,11 +38,23 @@ export default class TeamClient {
     }
 
     static UpdateOptions(opts: UpdateOptionsParam, token: string) {
-        return Client.post <UpdateOptionsParam, boolean>(
-            '/api/team/update' + encodeURIComponent(opts.guuid ?? ''),
+        return Client.patch<UpdateOptionsParam, boolean>(
+            '/api/team/update/options' + encodeURIComponent(opts.guuid ?? ''),
             opts,
             {
-                token: token
+                token: token,
+                contentType: 'application/json'
+            }
+        );
+    }
+
+    public static Update(team: Team, token: string): Promise<Team> {
+        return Client.patch <Team, Team>(
+            '/api/team/update' + encodeURIComponent(team.guuid ?? ''),
+            team,
+            {
+                token: token,
+                contentType: 'application/json'
             }
         );
     }

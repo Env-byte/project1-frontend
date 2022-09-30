@@ -37,7 +37,7 @@ export interface TeamHookStatus {
     canSave: boolean
 }
 
-const defaultTeam = {hexes: [], name: "", setId: '', isPublic: false, guuid: null}
+const defaultTeam = {hexes: [], name: "", setId: '', isPublic: false, guuid: null, isReadonly: false}
 
 const reducer = (state: Team, action: Action) => {
     switch (action.action) {
