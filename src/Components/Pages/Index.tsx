@@ -16,17 +16,17 @@ const summonerCards: Accounts[] = [
 ]
 const Index = () => {
     const cards = useMemo(() => {
-        return summonerCards.map((item) => <div className="col-lg-2 col-sm-6 mb-4">
-            <SummonerCard region={item.region} name={item.name} key={"summoner" + item.name}/>
+        return summonerCards.map((item) => <div key={"summoner-" + item.name} className="col-lg-2 col-sm-6 mb-4">
+            <SummonerCard region={item.region} name={item.name} />
         </div>)
     }, []);
     return <div className="container-fluid">
-        <div className="row mb-2">
+        <div key="header" className="row mb-2">
             <div className="col-lg-10 offset-lg-2">
                 <h4>Example profiles: </h4>
             </div>
         </div>
-        <div className="row">
+        <div key="summoner-cards" className="row">
             {cards}
         </div>
     </div>;
