@@ -54,15 +54,18 @@ const BuilderOptions = (props: BuilderOptionsProps) => {
         }
     }
 
+    const hideRow = (props.guuid === null ? {'display': 'none'} : {})
+
     return <>
-        <div style={{display: props.guuid === null ? 'none' : 'block'}} className="row mb-2">
-            <div className="col">
-                <h4>TFT Team Builder <span className={"badge badge-pill " + (formIsPublic ? "bg-success" : "bg-danger") + " badge-primary"}>
-                        {formIsPublic ? 'Public' : 'Private'}
-                    </span>
+        <div style={hideRow} className="row mb-2">
+            <div className="col-6">
+                <h4>{formName === '' ? 'TFT Team Builder' : 'Editing \'' + formName + '\''} <span
+                    className={"badge badge-pill " + (formIsPublic ? "bg-success" : "bg-danger") + " badge-primary"}>
+        {formIsPublic ? 'Public' : 'Private'}
+            </span>
                 </h4>
             </div>
-            <div className="col text-end">
+            <div className="col-6 text-end">
                 <Button onClick={() => {
                     setModal(true)
                 }} variant="primary"><FontAwesomeIcon size="lg" icon={cogIconDefinition}/> Settings</Button>
@@ -106,4 +109,5 @@ const BuilderOptions = (props: BuilderOptionsProps) => {
         <OptionsBar onSave={saveHandle} showSave={props.canSave} saveText={props.guuid === null ? 'Create' : undefined}/>
     </>
 }
-export default BuilderOptions;
+export default BuilderOptions
+;

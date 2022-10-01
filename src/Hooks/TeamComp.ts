@@ -182,11 +182,11 @@ const SaveOptionsHandle = (user: UserAccount | null, state: Team, name: string, 
 
 const GetHandle = (user: UserAccount | null, teamId: string, setData: StaticData): Promise<Team> => {
     return new Promise((resolve, reject) => {
-        if (teamId === '' || teamId === 'new' || user === null || user.accessToken === '') {
+        if (teamId === '' || teamId === 'new') {
             reject();
             return;
         }
-        TeamClient.Get(teamId, user.accessToken)
+        TeamClient.Get(teamId, (user?.accessToken) ?? '')
             .then((team) => {
                 //make sure champion data is set correctly as it is not stored in db
                 team.hexes = team.hexes.map(hex => {

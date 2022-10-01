@@ -12,8 +12,8 @@ export default class Client {
     //called on every request
     private static getHeader(data?: HeaderData) {
         return new Headers({
-            'api-token': (data?.token) ?? "",
-            'region': (data?.region) ?? "",
+            'Api-Token': (data?.token) ?? "",
+            'Region': (data?.region) ?? "",
             'Content-Type': (data?.contentType) ?? 'application/x-www-form-urlencoded',
 
         });
