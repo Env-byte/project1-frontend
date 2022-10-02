@@ -1,6 +1,6 @@
 import "../../Css/TeamBuilder/Board.css"
 import Hex from "./Hex";
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useState} from "react";
 import {Team} from "../../Types/Team";
 import {TeamDispatches} from "../../Hooks/TeamComp";
 import {Champion} from "../../Types/Api/Champion";

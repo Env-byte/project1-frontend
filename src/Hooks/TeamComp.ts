@@ -1,13 +1,14 @@
 import {Champion} from "../Types/Api/Champion";
 import {Team} from "../Types/Team";
-import {useEffect, useReducer, useState} from "react";
+import {useEffect, useReducer} from "react";
 import {useUser} from "../Contexts/UserContext";
 import StaticHelpers from "../Classes/StaticHelpers";
 import TeamClient from "../api/TeamClient";
-import ErrorHandler from "../Classes/ErrorHandler";
+import ErrorHandler, {ErrorWrapper} from "../Classes/ErrorHandler";
 import {ToastError} from "../Classes/SwalMixin";
 import {useStaticDataSet} from "../Contexts/StaticDataContext";
 import {StaticData} from "../Classes/StaticData";
+import {HookStatus, useHookStatus} from "./HookStatus";
 
 type ActionType = 'remove' | 'add' | 'saveOptions' | 'overwrite';
 
@@ -30,11 +31,6 @@ export interface TeamDispatches {
     remove: TeamRemove
     save: TeamSave
     saveOptions: TeamSaveOptions
-}
-
-export interface TeamHookStatus {
-    loading: boolean
-    canSave: boolean
 }
 
 const defaultTeam = {hexes: [], name: "", setId: '', isPublic: false, guuid: null, isReadonly: false}
@@ -71,12 +67,11 @@ const reducer = (state: Team, action: Action) => {
     }
 }
 
-export const useTeam = (tftSet: string, teamId: string): [Team, TeamHookStatus, TeamDispatches] => {
+export const useTeam = (tftSet: string, teamId: string): [Team, HookStatus, TeamDispatches] => {
     const {user} = useUser();
     const setData = useStaticDataSet(tftSet)
     const [state, dispatch] = useReducer(reducer, {...defaultTeam, setId: tftSet});
-    const [loading, setLoading] = useState<boolean>(false);
-    let canSave = false;
+    const [hookState, hookStateDispatches] = useHookStatus()
 
     const add = (champion: Champion, position: number) => {
         dispatch({action: "add", champion: champion, position: position})
@@ -87,18 +82,18 @@ export const useTeam = (tftSet: string, teamId: string): [Team, TeamHookStatus, 
     }
 
     const saveOptions = (name: string, isPublic: boolean) => {
-        setLoading(true);
+        hookStateDispatches.setLoading(true);
         SaveOptionsHandle(user, state, name, isPublic)
             .then(() => {
                 dispatch({action: "saveOptions", name: name, isPublic: isPublic});
             })
             .finally(() => {
-                setLoading(false);
+                hookStateDispatches.setLoading(false);
             })
     }
 
     const save = (callback?: (guuid: string) => void, name?: string, isPublic?: boolean) => {
-        setLoading(true);
+        hookStateDispatches.setLoading(true);
         SaveHandle(user, state, name, isPublic)
             .then((team) => {
                 dispatch({action: "overwrite", team: team})
@@ -107,27 +102,35 @@ export const useTeam = (tftSet: string, teamId: string): [Team, TeamHookStatus, 
                 }
             })
             .finally(() => {
-                setLoading(false);
+                hookStateDispatches.setLoading(false);
             });
     }
 
-    if (state.hexes.length > 0) {
-        canSave = true;
-    }
+    console.log(hookStateDispatches)
+    useEffect(() => {
+        if (state.hexes.length > 0) {
+            hookStateDispatches.setCanSave(true);
+        }
+    }, [state.hexes.length])
+
 
     useEffect(() => {
-        setLoading(true);
+        hookStateDispatches.setLoading(true);
         GetHandle(user, teamId, setData)
             .then((team) => {
                 dispatch({action: "overwrite", team: team})
             })
-            .finally(() => {
-                setLoading(false);
+            .catch((e: ErrorWrapper) => {
+                if (e.type === "Access Denied") {
+                    hookStateDispatches.setHasAccess(false);
+                }
             })
-
+            .finally(() => {
+                hookStateDispatches.setLoading(false);
+            })
     }, [setData, teamId, user])
 
-    return [state, {loading, canSave}, {add, remove, save, saveOptions}]
+    return [state, hookState, {add, remove, save, saveOptions}]
 }
 
 const SaveHandle = (user: UserAccount | null, state: Team, name?: string, isPublic?: boolean): Promise<Team> => {
@@ -156,7 +159,10 @@ const SaveHandle = (user: UserAccount | null, state: Team, name?: string, isPubl
             .then((team) => {
                 resolve(team);
             })
-            .catch(ErrorHandler.Catch)
+            .catch((reason) => {
+                ErrorHandler.Catch(reason);
+                reject();
+            })
     })
 }
 
@@ -176,7 +182,10 @@ const SaveOptionsHandle = (user: UserAccount | null, state: Team, name: string, 
             .then(() => {
                 resolve(true);
             })
-            .catch(ErrorHandler.Catch)
+            .catch((reason) => {
+                ErrorHandler.Catch(reason);
+                reject();
+            })
     })
 }
 
@@ -198,6 +207,8 @@ const GetHandle = (user: UserAccount | null, teamId: string, setData: StaticData
                 })
                 resolve(team);
             })
-            .catch(ErrorHandler.Catch)
+            .catch((reason) => {
+                reject(ErrorHandler.Catch(reason));
+            })
     })
 }

@@ -5,6 +5,7 @@ import {useTeam} from "../../Hooks/TeamComp";
 import Loading from "../Loading";
 import BuilderOptions from "../TeamBuilder/BuilderOptions";
 import BuilderBody from "../TeamBuilder/BuilderBody";
+import AccessDenied from "./AccessDenied";
 
 const Builder = () => {
     const urlParam = useParams();
@@ -14,7 +15,9 @@ const Builder = () => {
     useEffect(() => {
         setTeamId(urlParam.id as string);
     }, [urlParam])
-
+    if (!teamHookState.hasAccess) {
+        return <AccessDenied name="Team"/>;
+    }
     return <>
         {teamHookState.loading ? <Loading size={'1x'} screen={true}/> : <></>}
         <div className="container-fluid">
