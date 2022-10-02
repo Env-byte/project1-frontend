@@ -3,8 +3,6 @@ import {DropResult} from "../../Types/DragDrop";
 import {TeamAdd, TeamRemove} from "../../Hooks/TeamComp";
 import {Champion} from "../../Types/Api/Champion";
 import StaticHelpers from "../../Classes/StaticHelpers";
-import {useMemo} from "react";
-import {useStaticDataSet} from "../../Contexts/StaticDataContext";
 
 interface HexProps {
     position: number,
@@ -12,6 +10,10 @@ interface HexProps {
     remove: TeamRemove,
     champion?: Champion
     setId: string
+}
+
+export interface HexDropResult {
+    name: string
 }
 
 function selectBackgroundColor(isActive: boolean, canDrop: boolean) {

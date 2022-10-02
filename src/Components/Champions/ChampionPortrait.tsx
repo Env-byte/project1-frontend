@@ -1,10 +1,11 @@
 import {useStaticDataSet} from "../../Contexts/StaticDataContext";
-import {ContentClient} from "../../api/FetchWrapper";
 import {useId, useMemo} from "react";
 import {ItemPortrait} from "../Items/ItemPortrait";
 import "../../Css/Champions/Portrait.css"
-import {DragSourceMonitor, useDrag} from "react-dnd";
 import StaticHelpers from "../../Classes/StaticHelpers";
+import DragComponent from "../DragComponent";
+import {Champion} from "../../Types/Api/Champion";
+import {HexDropResult} from "../TeamBuilder/Hex";
 
 export interface ChampionPortraitProps {
     characterId: string
@@ -19,26 +20,6 @@ export const ChampionPortrait = (props: ChampionPortraitProps) => {
     const champion = useMemo(() => {
         return setData.getChampion(props.characterId);
     }, [props.characterId, setData]);
-
-    const [{opacity}, drag] = useDrag(
-        () => ({
-            type: 'champion',
-            item: champion,
-            options: {
-                dropEffect: 'copy'
-            },
-            end(item, monitor) {
-                // const dropResult = monitor.getDropResult() as DropResult
-            },
-            collect: (monitor: DragSourceMonitor) => ({
-                opacity: monitor.isDragging() ? 0.4 : 1,
-            }),
-            canDrag: () => {
-                return props.useDrag === true;
-            }
-        }),
-        [],
-    )
 
     let items: JSX.Element[] = useMemo(() => {
         let temp = [];
@@ -56,11 +37,22 @@ export const ChampionPortrait = (props: ChampionPortraitProps) => {
     if (!champion) {
         return <div className="champion-portrait"><p>Champion Id not found: {props.characterId}</p></div>
     }
-    return <div className="champion-portrait" ref={drag} style={{opacity}}>
+
+    const champPortrait = <>
         <img alt={champion.name}
              src={StaticHelpers.championImage(props.tftSet, champion.name)}/>
         <div className="flex-container item-row">
             {items}
         </div>
-    </div>;
+    </>;
+
+    if (props.useDrag) {
+        return <DragComponent<Champion, HexDropResult>
+            className="champion-portrait"
+            type={"champion"}
+            item={champion}>
+            {champPortrait}
+        </DragComponent>
+    }
+    return <div className="champion-portrait">{champPortrait}</div>;
 }
