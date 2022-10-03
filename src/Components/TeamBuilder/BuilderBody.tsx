@@ -5,7 +5,7 @@ import ChampionSearch from "../Champions/ChampionSearch";
 import EquippedItems from "./EquippedItems";
 import {useChampionFilter} from "../../Hooks/ChampionFilter";
 import {Team} from "../../Types/Team";
-import {TeamDispatches} from "../../Hooks/TeamComp";
+import {TeamDispatches} from "../../Hooks/TeamBuilder";
 
 interface BuilderBodyProps {
     setId: string

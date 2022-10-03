@@ -1,20 +1,24 @@
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {useTFTSet} from "../../Contexts/TFTSetContext";
-import {useTeam} from "../../Hooks/TeamComp";
+import {useTeamBuilder} from "../../Hooks/TeamBuilder";
 import Loading from "../Loading";
 import BuilderOptions from "../TeamBuilder/BuilderOptions";
 import BuilderBody from "../TeamBuilder/BuilderBody";
-import AccessDenied from "./AccessDenied";
+import AccessDenied from "../ErrorStates/AccessDenied";
+import NotFound from "../ErrorStates/NotFound";
 
 const Builder = () => {
     const urlParam = useParams();
     const [teamId, setTeamId] = useState<string>('');
     const {tftSet} = useTFTSet();
-    const [team, teamHookState, teamDispatches] = useTeam(tftSet.id, teamId);
+    const [team, teamHookState, teamDispatches] = useTeamBuilder(tftSet.id, teamId);
     useEffect(() => {
         setTeamId(urlParam.id as string);
     }, [urlParam])
+    if (!teamHookState.found) {
+        return <NotFound name="Team"/>
+    }
     if (!teamHookState.hasAccess) {
         return <AccessDenied name="Team"/>;
     }

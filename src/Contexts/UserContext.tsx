@@ -22,7 +22,14 @@ export const UserProvider = (props: AuthProviderProps) => {
                 .then((user) => {
                     setUser(user)
                 })
-                .catch(ErrorHandler.Catch)
+                .catch((e) => {
+                    const error = ErrorHandler.Catch(e)
+                    switch (error.type) {
+                        case "Not Found":
+                            localStorage.removeItem('user-token');
+                            break;
+                    }
+                })
         }
     }, [setUser])
     return <UserContext.Provider value={{user, setUser}}>

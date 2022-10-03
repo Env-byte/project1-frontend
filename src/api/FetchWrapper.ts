@@ -11,24 +11,24 @@ export default class Client {
 
     //called on every request
     private static getHeader(data?: HeaderData) {
-        return new Headers({
-            'Api-Token': (data?.token) ?? "",
-            'Region': (data?.region) ?? "",
-            'Content-Type': (data?.contentType) ?? 'application/x-www-form-urlencoded',
-
-        });
+        let headers = new Headers();
+        headers.append('accept', '*/*');
+        headers.append('Api-Token', (data?.token) ?? "");
+        headers.append('Region', (data?.region) ?? "");
+        headers.append('Content-Type', (data?.contentType) ?? 'application/x-www-form-urlencoded');
+        return headers
     }
 
     public static async get<TResponseBody>(request: string, data?: HeaderData): Promise<TResponseBody> {
         return this.execFetch(this.ApiPrefix + request, {
-            method: 'get',
+            method: 'GET',
             headers: this.getHeader(data),
         });
     }
 
     public static async post<TRequestBody, TResponseBody>(request: string, body: TRequestBody, data?: HeaderData): Promise<TResponseBody> {
         return this.execFetch(this.ApiPrefix + request, {
-            method: 'post',
+            method: 'POST',
             headers: this.getHeader(data),
             body: JSON.stringify(body)
         });
@@ -36,9 +36,19 @@ export default class Client {
 
     public static async patch<TRequestBody, TResponseBody>(request: string, body: TRequestBody, data?: HeaderData): Promise<TResponseBody> {
         return this.execFetch(this.ApiPrefix + request, {
-            method: 'patch',
+            method: 'PATCH',
             headers: this.getHeader(data),
-            body: JSON.stringify(body)
+            body: JSON.stringify(body),
+            redirect: 'follow'
+        });
+    }
+
+    public static async put<TRequestBody, TResponseBody>(request: string, body: TRequestBody, data?: HeaderData): Promise<TResponseBody> {
+        return this.execFetch(this.ApiPrefix + request, {
+            method: 'PUT',
+            headers: this.getHeader(data),
+            body: JSON.stringify(body),
+            redirect: 'follow'
         });
     }
 

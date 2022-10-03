@@ -1,6 +1,6 @@
 import {useDrop} from "react-dnd";
 import {DropResult} from "../../Types/DragDrop";
-import {TeamAdd, TeamRemove} from "../../Hooks/TeamComp";
+import {TeamAdd, TeamRemove} from "../../Hooks/TeamBuilder";
 import {Champion} from "../../Types/Api/Champion";
 import StaticHelpers from "../../Classes/StaticHelpers";
 

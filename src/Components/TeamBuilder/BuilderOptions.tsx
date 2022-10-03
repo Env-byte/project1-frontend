@@ -1,11 +1,12 @@
 import OptionsBar from "../OptionsBar";
-import {TeamSave, TeamSaveOptions} from "../../Hooks/TeamComp";
+import {TeamSave, TeamSaveOptions} from "../../Hooks/TeamBuilder";
 import {Button, Form, Modal} from "react-bootstrap";
 import {findIconDefinition, IconDefinition, library} from "@fortawesome/fontawesome-svg-core";
 import {faCog} from "@fortawesome/free-solid-svg-icons/faCog";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import TeamPublicBadge from "../Teams/TeamPublicBadge";
 
 interface BuilderOptionsProps {
     saveDispatch: TeamSave
@@ -23,46 +24,43 @@ const BuilderOptions = (props: BuilderOptionsProps) => {
     const [formName, setFormName] = useState('');
     const [formIsPublic, setFormIsPublic] = useState(false);
     let navigate = useNavigate();
-
     useEffect(() => {
         setFormName(props.name)
     }, [props.name])
     useEffect(() => {
         setFormIsPublic(props.isPublic)
     }, [props.isPublic])
-
     const saveHandle = () => {
         if (props.name === '') {
             setModal(true);
             return;
         }
-        if (props.guuid === null) {
-            return;
-        }
-        props.saveDispatch()
+        props.saveDispatch();
     }
+    const closeModal = (save: boolean) => {
+        setModal(false);
+        if (save) {
 
-    const closeModal = () => {
-        setModal(false)
-        if (props.guuid === null) {
-            props.saveDispatch((guuid: string) => {
-                //redirect to page using url param
-                navigate("/teams/builder/" + encodeURIComponent(guuid));
-            }, formName, formIsPublic)
+            if (props.guuid === null) {
+                props.saveDispatch((guuid: string) => {
+                    //redirect to page using url param
+                    navigate("/teams/builder/" + encodeURIComponent(guuid), {replace: true});
+                }, formName, formIsPublic)
+            } else {
+                console.log('here')
+                props.saveOptionsDispatch(formName, formIsPublic);
+            }
         } else {
-            props.saveOptionsDispatch(formName, formIsPublic);
+            setFormName(props.name)
+            setFormIsPublic(props.isPublic)
         }
     }
-
     const hideRow = (props.guuid === null ? {'display': 'none'} : {})
-
     return <>
         <div style={hideRow} className="row mb-2">
             <div className="col-6">
-                <h4>{formName === '' ? 'TFT Team Builder' : 'Editing \'' + formName + '\''} <span
-                    className={"badge badge-pill " + (formIsPublic ? "bg-success" : "bg-danger") + " badge-primary"}>
-        {formIsPublic ? 'Public' : 'Private'}
-            </span>
+                <h4>{formName === '' ? 'TFT Team Builder' : 'Editing \'' + props.name + '\''} <TeamPublicBadge
+                    isPublic={props.isPublic}/>
                 </h4>
             </div>
             <div className="col-6 text-end">
@@ -75,7 +73,9 @@ const BuilderOptions = (props: BuilderOptionsProps) => {
             show={modal}
             aria-labelledby="contained-modal-title-vcenter"
             centered
-            onHide={closeModal}>
+            onHide={() => {
+                closeModal(false)
+            }}>
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
                     Team Settings
@@ -86,10 +86,9 @@ const BuilderOptions = (props: BuilderOptionsProps) => {
                     <Form.Group className="mb-3" controlId="forTeamName">
                         <Form.Label>Team Name</Form.Label>
                         <Form.Control value={formName} onChange={(event) => {
-                            setFormName(event.target.value)
+                            setFormName(event.target.value);
                         }} type="text" placeholder="Enter a name"/>
                     </Form.Group>
-
                     <Form.Group className="mb-3" controlId="formIsPublic">
                         <Form.Check checked={formIsPublic} onChange={(event) => {
                             setFormIsPublic(event.target.checked);
@@ -98,10 +97,14 @@ const BuilderOptions = (props: BuilderOptionsProps) => {
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="danger" onClick={closeModal}>
+                <Button variant="danger" onClick={() => {
+                    closeModal(false)
+                }}>
                     Close
                 </Button>
-                <Button variant="success" onClick={closeModal}>
+                <Button variant="success" onClick={() => {
+                    closeModal(true)
+                }}>
                     Save
                 </Button>
             </Modal.Footer>
@@ -109,5 +112,4 @@ const BuilderOptions = (props: BuilderOptionsProps) => {
         <OptionsBar onSave={saveHandle} showSave={props.canSave} saveText={props.guuid === null ? 'Create' : undefined}/>
     </>
 }
-export default BuilderOptions
-;
+export default BuilderOptions;

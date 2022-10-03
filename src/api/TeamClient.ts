@@ -3,9 +3,7 @@ import {Team} from "../Types/Team";
 
 interface UpdateOptionsParam {
     name: string,
-    isPublic: boolean,
-    guuid: string
-}
+    isPublic: boolean}
 
 export default class TeamClient {
     public static Create(team: Team, token: string): Promise<Team> {
@@ -28,18 +26,18 @@ export default class TeamClient {
         );
     }
 
-    public static List(team: Team, token: string): Promise<Team> {
-        return Client.get <Team>(
-            '/api/team/list',
+    public static ListUser(token: string): Promise<Team[]> {
+        return Client.get <Team[]>(
+            '/api/team/list/user',
             {
                 token: token
             }
         );
     }
 
-    static UpdateOptions(opts: UpdateOptionsParam, token: string) {
+    static UpdateOptions(guuid:string,opts: UpdateOptionsParam, token: string) {
         return Client.patch<UpdateOptionsParam, boolean>(
-            '/api/team/update/options' + encodeURIComponent(opts.guuid ?? ''),
+            '/api/team/' + encodeURIComponent(guuid ?? '') + '/update/options',
             opts,
             {
                 token: token,
@@ -48,14 +46,20 @@ export default class TeamClient {
         );
     }
 
-    public static Update(team: Team, token: string): Promise<Team> {
-        return Client.patch <Team, Team>(
-            '/api/team/update' + encodeURIComponent(team.guuid ?? ''),
+    public static Update(team: Team, token: string): Promise<boolean> {
+        return Client.put <Team, boolean>(
+            '/api/team/' + encodeURIComponent(team.guuid ?? '') + '/update',
             team,
             {
                 token: token,
                 contentType: 'application/json'
             }
+        );
+    }
+
+    public static List(): Promise<Team[]> {
+        return Client.get <Team[]>(
+            '/api/team/list'
         );
     }
 }

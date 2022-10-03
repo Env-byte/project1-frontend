@@ -2,7 +2,7 @@ import "../../Css/TeamBuilder/Board.css"
 import Hex from "./Hex";
 import {useEffect, useState} from "react";
 import {Team} from "../../Types/Team";
-import {TeamDispatches} from "../../Hooks/TeamComp";
+import {TeamDispatches} from "../../Hooks/TeamBuilder";
 import {Champion} from "../../Types/Api/Champion";
 
 interface BoardProps {

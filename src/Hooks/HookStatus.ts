@@ -4,15 +4,17 @@ export interface HookStatus {
     loading: boolean
     canSave: boolean
     hasAccess: boolean
+    found: boolean
 }
 
 const defaultState: HookStatus = {
     loading: false,
     canSave: false,
-    hasAccess: true
+    hasAccess: true,
+    found: true
 }
 
-type ActionType = 'setLoading' | 'setCanSave' | 'setHasAccess';
+type ActionType = 'setLoading' | 'setCanSave' | 'setHasAccess' | 'setFound';
 
 export interface Action {
     action: ActionType;
@@ -22,11 +24,13 @@ export interface Action {
 export type SetLoading = (value: boolean) => void;
 export type SetCanSave = (value: boolean) => void;
 export type SetHasAccess = (value: boolean) => void;
+export type SetFound = (value: boolean) => void;
 
 export interface HookStatusDispatches {
     setLoading: SetLoading
     setCanSave: SetCanSave
     setHasAccess: SetHasAccess
+    setFound: SetFound
 }
 
 const reducer = (state: HookStatus, action: Action) => {
@@ -37,6 +41,8 @@ const reducer = (state: HookStatus, action: Action) => {
             return {...state, canSave: action.value}
         case "setHasAccess":
             return {...state, hasAccess: action.value}
+        case "setFound":
+            return {...state, found: action.value}
     }
 }
 export const useHookStatus = (): [HookStatus, HookStatusDispatches] => {
@@ -50,5 +56,8 @@ export const useHookStatus = (): [HookStatus, HookStatusDispatches] => {
     const setHasAccess = (value: boolean) => {
         dispatch({action: 'setHasAccess', value: value})
     }
-    return [state, {setLoading, setCanSave, setHasAccess}];
+    const setFound = (value: boolean) => {
+        dispatch({action: 'setFound', value: value})
+    }
+    return [state, {setLoading, setCanSave, setHasAccess, setFound}];
 }

@@ -5,7 +5,7 @@ import {useUser} from "../Contexts/UserContext";
 import StaticHelpers from "../Classes/StaticHelpers";
 import TeamClient from "../api/TeamClient";
 import ErrorHandler, {ErrorWrapper} from "../Classes/ErrorHandler";
-import {ToastError} from "../Classes/SwalMixin";
+import {ToastError, ToastSuccess} from "../Classes/SwalMixin";
 import {useStaticDataSet} from "../Contexts/StaticDataContext";
 import {StaticData} from "../Classes/StaticData";
 import {HookStatus, useHookStatus} from "./HookStatus";
@@ -67,7 +67,7 @@ const reducer = (state: Team, action: Action) => {
     }
 }
 
-export const useTeam = (tftSet: string, teamId: string): [Team, HookStatus, TeamDispatches] => {
+export const useTeamBuilder = (tftSet: string, teamId: string): [Team, HookStatus, TeamDispatches] => {
     const {user} = useUser();
     const setData = useStaticDataSet(tftSet)
     const [state, dispatch] = useReducer(reducer, {...defaultTeam, setId: tftSet});
@@ -106,7 +106,6 @@ export const useTeam = (tftSet: string, teamId: string): [Team, HookStatus, Team
             });
     }
 
-    console.log(hookStateDispatches)
     useEffect(() => {
         if (state.hexes.length > 0) {
             hookStateDispatches.setCanSave(true);
@@ -121,8 +120,18 @@ export const useTeam = (tftSet: string, teamId: string): [Team, HookStatus, Team
                 dispatch({action: "overwrite", team: team})
             })
             .catch((e: ErrorWrapper) => {
-                if (e.type === "Access Denied") {
-                    hookStateDispatches.setHasAccess(false);
+                if (e) {
+                    switch (e.type) {
+                        case "Access Denied":
+                            hookStateDispatches.setHasAccess(false);
+                            break;
+                        case "Not Found":
+                            hookStateDispatches.setFound(false);
+                            break;
+                        case "Internal Server Error":
+                            break;
+
+                    }
                 }
             })
             .finally(() => {
@@ -140,7 +149,6 @@ const SaveHandle = (user: UserAccount | null, state: Team, name?: string, isPubl
             reject();
             return;
         }
-        let promise;
         if (state.guuid === null) {
             const team = StaticHelpers.deepCopy(state);
             if (name === undefined) {
@@ -151,18 +159,22 @@ const SaveHandle = (user: UserAccount | null, state: Team, name?: string, isPubl
             if (isPublic === undefined) {
                 isPublic = false;
             }
-            promise = TeamClient.Create({...team, name: name, isPublic: isPublic}, user.accessToken)
+            TeamClient.Create({...team, name: name, isPublic: isPublic}, user.accessToken)
+                .then((team) => {
+                    resolve(team);
+                })
+                .catch((reason) => {
+                    reject(ErrorHandler.Catch(reason));
+                })
         } else {
-            promise = TeamClient.Update(state, user.accessToken)
+            TeamClient.Update(state, user.accessToken).then(() => {
+                resolve(state);
+                ToastSuccess.fire('Saved Team');
+            })
+                .catch((reason) => {
+                    reject(ErrorHandler.Catch(reason));
+                })
         }
-        promise
-            .then((team) => {
-                resolve(team);
-            })
-            .catch((reason) => {
-                ErrorHandler.Catch(reason);
-                reject();
-            })
     })
 }
 
@@ -178,13 +190,12 @@ const SaveOptionsHandle = (user: UserAccount | null, state: Team, name: string, 
             reject();
             return;
         }
-        TeamClient.UpdateOptions({name: name, isPublic: isPublic, guuid: state.guuid}, user.accessToken)
+        TeamClient.UpdateOptions(state.guuid, {name: name, isPublic: isPublic}, user.accessToken)
             .then(() => {
                 resolve(true);
             })
             .catch((reason) => {
-                ErrorHandler.Catch(reason);
-                reject();
+                reject(ErrorHandler.Catch(reason));
             })
     })
 }
@@ -201,6 +212,7 @@ const GetHandle = (user: UserAccount | null, teamId: string, setData: StaticData
                 team.hexes = team.hexes.map(hex => {
                     let champ = setData.getChampion(hex.champion.championId)
                     if (champ) {
+                        champ.items = hex.champion.items;
                         hex.champion = champ;
                     }
                     return hex

@@ -17,7 +17,7 @@ const AppRoutes = () => {
             <Route path='/champions' element={<Champions/>}/>
             <Route path='/teams/builder/:id' element={<Builder/>}/>
             <Route path='/teams' element={<Teams/>}/>
-            <Route path={'/summoner/:region/:name'} element={<Summoner/>}/>
+            <Route path='/summoner/:region/:name' element={<Summoner/>}/>
         </Routes>
     );
 }

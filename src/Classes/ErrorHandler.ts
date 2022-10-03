@@ -1,14 +1,16 @@
 import {ToastError} from "./SwalMixin";
 
+type ErrorType = 'Access Denied' | 'Not Found' | 'Internal Server Error'
+
 export interface ErrorWrapper {
     message: string
-    type: string
+    type: ErrorType
 }
 
 export default class ErrorHandler {
     public static Catch(error: any): ErrorWrapper {
         console.error(error)
-        let errorWrapper: ErrorWrapper = {message: "", type: ""}
+        let errorWrapper: ErrorWrapper = {message: "", type: 'Internal Server Error'}
         try {
             errorWrapper = JSON.parse(error as string) as ErrorWrapper;
             console.log('errorWrapper', errorWrapper)
