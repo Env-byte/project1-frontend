@@ -11,7 +11,7 @@ interface TftSetContextObj {
 }
 
 interface TFTSetProviderProps {
-    children: JSX.Element[]
+    children: JSX.Element
 }
 
 export const TFTSets: TFTSetObj[] = [{"name": 'TFT Set 7', 'id': 'TFTSet7'}, {"name": "TFT Set 7.5", "id": 'TFTSet7_2'}]

@@ -2,17 +2,15 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
     IconDefinition,
     findIconDefinition,
+    library
 } from '@fortawesome/fontawesome-svg-core'
-import {library} from '@fortawesome/fontawesome-svg-core'
 import {faSignOut} from "@fortawesome/free-solid-svg-icons";
-
-library.add(faSignOut)
 
 interface PropsLogout {
     name: string,
     onClick: () => void
 }
-
+library.add(faSignOut)
 const signOutIconDefinition: IconDefinition = findIconDefinition({prefix: 'fas', iconName: 'sign-out'})
 export default function Logout(props: PropsLogout) {
     return (

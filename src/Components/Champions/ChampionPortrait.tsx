@@ -1,24 +1,24 @@
 import {useStaticDataSet} from "../../Contexts/StaticDataContext";
-import {ContentClient} from "../../api/FetchWrapper";
 import {useId, useMemo} from "react";
 import {ItemPortrait} from "../Items/ItemPortrait";
 import "../../Css/Champions/Portrait.css"
+import StaticHelpers from "../../Classes/StaticHelpers";
+import DragComponent from "../DragComponent";
+import {Champion} from "../../Types/Api/Champion";
+import {HexDropResult} from "../TeamBuilder/Hex";
 
 export interface ChampionPortraitProps {
     characterId: string
     items?: number[]
     tftSet: string
+    useDrag?: boolean
 }
 
 export const ChampionPortrait = (props: ChampionPortraitProps) => {
     const id = useId();
-
     const setData = useStaticDataSet(props.tftSet)
     const champion = useMemo(() => {
-        if (setData) {
-            return setData.getChampion(props.characterId);
-        }
-        return false;
+        return setData.getChampion(props.characterId);
     }, [props.characterId, setData]);
 
     let items: JSX.Element[] = useMemo(() => {
@@ -37,11 +37,22 @@ export const ChampionPortrait = (props: ChampionPortraitProps) => {
     if (!champion) {
         return <div className="champion-portrait"><p>Champion Id not found: {props.characterId}</p></div>
     }
-    return <div className="champion-portrait">
+
+    const champPortrait = <>
         <img alt={champion.name}
-             src={ContentClient.ApiPrefix + "/" + props.tftSet + "/champions/" + encodeURIComponent(champion.name.replace('\'', '')) + ".png"}/>
+             src={StaticHelpers.championImage(props.tftSet, champion.name)}/>
         <div className="flex-container item-row">
             {items}
         </div>
-    </div>;
+    </>;
+
+    if (props.useDrag) {
+        return <DragComponent<Champion, HexDropResult>
+            className="champion-portrait"
+            type={"champion"}
+            item={champion}>
+            {champPortrait}
+        </DragComponent>
+    }
+    return <div className="champion-portrait">{champPortrait}</div>;
 }

@@ -6,6 +6,5 @@ export default class UserClient {
 
     static LoginAccessToken(token: string): Promise<UserAccount> {
         return Client.post <string, UserAccount>('/api/user/access-token/login?token=' + token, '');
-
     }
 }

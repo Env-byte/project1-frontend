@@ -11,6 +11,7 @@ library.add(faTimes)
 export interface ActiveFiltersProps {
     filter: ChampionFilter;
     dispatches: FilterDispatches;
+    allowRemove?: boolean
 }
 
 const xIconDefinition: IconDefinition = findIconDefinition({prefix: 'fas', iconName: 'times'})
@@ -30,25 +31,13 @@ const ActiveFilters = (props: ActiveFiltersProps) => {
             }
         }
         setOrigins(props.filter.origin.map(item => {
-            return <span key={'origin-' + item} onClick={() => {
-                handleClick('origin', item)
-            }} style={badgeStyle} className="mx-1 badge badge-pill bg-primary badge-primary">
-                <FontAwesomeIcon size={'xs'} icon={xIconDefinition}/> {item}
-            </span>
+            return <Filter key={'origin-' + item} name={item.toString()} onClick={handleClick} allowRemove={props.allowRemove} bgColour="bg-primary"/>
         }))
         setClasses(props.filter.class.map(item => {
-            return <span key={'class-' + item} onClick={() => {
-                handleClick('class', item)
-            }} style={badgeStyle} className="mx-1 badge badge-pill bg-warning  badge-primary">
-                <FontAwesomeIcon size={'xs'} icon={xIconDefinition}/> {item}
-            </span>
+            return <Filter key={'class-' + item} name={item.toString()} onClick={handleClick} allowRemove={props.allowRemove} bgColour="bg-warning"/>
         }));
         setCosts(props.filter.cost.map(item => {
-            return <span key={'cost-' + item} onClick={() => {
-                handleClick('cost', item)
-            }} style={badgeStyle} className="mx-1 badge badge-pill bg-info  badge-primary">
-                <FontAwesomeIcon size={'xs'} icon={xIconDefinition}/> {item} Cost
-            </span>
+            return <Filter key={'cost-' + item} name={item.toString()} onClick={handleClick} allowRemove={props.allowRemove} bgColour="bg-info"/>
         }));
     }, [props]);
 
@@ -63,3 +52,24 @@ const ActiveFilters = (props: ActiveFiltersProps) => {
     </>
 }
 export default ActiveFilters;
+
+interface FilterProps {
+    allowRemove?: boolean
+    name: string
+    onClick: (type: string, val: number | string) => void
+    bgColour: string
+}
+
+const Filter = (props: FilterProps) => {
+
+    return <span
+        onClick={() => {
+            if (props.allowRemove !== false) {
+                props.onClick('cost', props.name)
+            }
+        }}
+        style={props.allowRemove !== false ? badgeStyle : {}}
+        className={"mx-1 badge badge-pill " + props.bgColour + " badge-primary"}>
+               {props.allowRemove !== false ? <FontAwesomeIcon size={'xs'} icon={xIconDefinition}/> : <></>} {props.name} Cost
+            </span>
+}

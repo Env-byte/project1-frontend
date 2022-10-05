@@ -1,22 +1,27 @@
 
-.board {
+.board,
+.team-view {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     width: 700px;
     font-family: "Raleway", sans-serif;
     font-size: 15px;
+    margin: auto;
     list-style-type: none;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none
 }
 
-.board.active .hex .hex-in .hex-link {
+.board.active .hex .hex-in .hex-link,
+.team-view.active .hex .hex-in .hex-link
+{
     background: #183f54
 }
 
-.board .hex {
+.board .hex,
+.team-view .hex {
     display: inline-block;
     text-align: left;
     position: relative;
@@ -31,141 +36,193 @@
     cursor: pointer
 }
 
-.board .hex.c1 {
+.board .hex.c1,
+.team-view .hex.c1
+{
     border-right-color: #213042;
     border-left-color: #213042
 }
 
-.board .hex.c1 .hex-top {
+.board .hex.c1 .hex-top,
+.team-view .hex.c1 .hex-top
+{
     border-top-color: #213042;
     border-right-color: #213042
 }
 
-.board .hex.c1 .hex-bottom {
+.board .hex.c1 .hex-bottom,
+.team-view .hex.c1 .hex-bottom
+{
     border-bottom-color: #213042;
     border-left-color: #213042
 }
 
-.board .hex.c2 {
+.board .hex.c2,
+.team-view .hex.c2
+{
     border-right-color: #156831;
     border-left-color: #156831
 }
 
-.board .hex.c2 .hex-top {
+.board .hex.c2 .hex-top,
+.team-view .hex.c2 .hex-top
+{
     border-top-color: #156831;
     border-right-color: #156831
 }
 
-.board .hex.c2 .hex-bottom {
+.board .hex.c2 .hex-bottom,
+.team-view .hex.c2 .hex-bottom
+{
     border-bottom-color: #156831;
     border-left-color: #156831
 }
 
-.board .hex.c3 {
+.board .hex.c3,
+.team-view .hex.c3
+{
     border-right-color: #12407c;
     border-left-color: #12407c
 }
 
-.board .hex.c3 .hex-top {
+.board .hex.c3 .hex-top,
+.team-view .hex.c3 .hex-top
+{
     border-top-color: #12407c;
     border-right-color: #12407c
 }
 
-.board .hex.c3 .hex-bottom {
+.board .hex.c3 .hex-bottom,
+.team-view .hex.c3 .hex-bottom
+{
     border-bottom-color: #12407c;
     border-left-color: #12407c
 }
 
-.board .hex.c4 {
+.board .hex.c4,
+.team-view .hex.c4
+{
     border-right-color: #893088;
     border-left-color: #893088
 }
 
-.board .hex.c4 .hex-top {
+.board .hex.c4 .hex-top,
+.team-view .hex.c4 .hex-top
+{
     border-top-color: #893088;
     border-right-color: #893088
 }
 
-.board .hex.c4 .hex-bottom {
+.board .hex.c4 .hex-bottom,
+.team-view .hex.c4 .hex-bottom
+{
     border-bottom-color: #893088;
     border-left-color: #893088
 }
 
-.board .hex.c5 {
+.board .hex.c5,
+.team-view .hex.c5
+{
     border-right-color: #b89d27;
     border-left-color: #b89d27
 }
 
-.board .hex.c5 .hex-top {
+.board .hex.c5 .hex-top,
+.team-view .hex.c5 .hex-top
+{
     border-top-color: #b89d27;
     border-right-color: #b89d27
 }
 
-.board .hex.c5 .hex-bottom {
+.board .hex.c5 .hex-bottom,
+.team-view .hex.c5 .hex-bottom
+{
     border-bottom-color: #b89d27;
     border-left-color: #b89d27
 }
 
-.board .hex.c6 {
+.board .hex.c6,
+.team-view .hex.c6
+{
     border-right-color: #12407c;
     border-left-color: #12407c
 }
 
-.board .hex.c6 .hex-top {
+.board .hex.c6 .hex-top,
+.team-view .hex.c6 .hex-top
+{
     border-top-color: #12407c;
     border-right-color: #12407c
 }
 
-.board .hex.c6 .hex-bottom {
+.board .hex.c6 .hex-bottom,
+.team-view .hex.c6 .hex-bottom
+{
     border-bottom-color: #12407c;
     border-left-color: #12407c
 }
 
-.board .hex.c7 {
+.board .hex.c7,
+.team-view .hex.c7
+{
     border-right-color: #893088;
     border-left-color: #893088
 }
 
-.board .hex.c7 .hex-top {
+.board .hex.c7 .hex-top,
+.team-view .hex.c7 .hex-top
+{
     border-top-color: #893088;
     border-right-color: #893088
 }
 
-.board .hex.c7 .hex-bottom {
+.board .hex.c7 .hex-bottom,
+.team-view .hex.c7 .hex-bottom
+{
     border-bottom-color: #893088;
     border-left-color: #893088
 }
 
-.board .hex.c8 {
+.board .hex.c8,
+.team-view .hex.c8
+{
     border-right-color: #b89d27;
     border-left-color: #b89d27
 }
 
-.board .hex.c8 .hex-top {
+.board .hex.c8 .hex-top,
+.team-view .hex.c8 .hex-top
+{
     border-top-color: #b89d27;
     border-right-color: #b89d27
 }
 
-.board .hex.c8 .hex-bottom {
+.board .hex.c8 .hex-bottom,
+.team-view .hex.c8 .hex-bottom
+{
     border-bottom-color: #b89d27;
     border-left-color: #b89d27
 }
 
-.board .hex.filled:hover .character-level {
-    opacity: 1
-}
-
-.board .hex.active .hex-in .hex-link {
+.board .hex.active .hex-in .hex-link,
+.team-view .hex.active .hex-in .hex-link
+{
     background: #227aad
 }
 
-.board .hex:after {
+.board .hex:after,
+.team-view .hex:after
+{
     content: "";
     display: block;
     padding-bottom: 90%
 }
 
-.board .hex .hex-bottom, .board .hex .hex-top {
+.board .hex .hex-bottom,
+.board .hex .hex-top ,
+.team-view .hex .hex-bottom,
+.team-view .hex .hex-top
+{
     position: absolute;
     z-index: 1;
     overflow: hidden;
@@ -176,7 +233,11 @@
     left: 8px
 }
 
-.board .hex .hex-bottom:after, .board .hex .hex-top:after {
+.board .hex .hex-bottom:after,
+.board .hex .hex-top:after,
+.team-view .hex .hex-bottom:after,
+.team-view .hex .hex-top:after
+{
     content: "";
     position: absolute;
     transform-origin: 0 0;
@@ -186,40 +247,32 @@
     transform: rotate(45deg) scaleY(1.7) translateY(-20.5px)
 }
 
-.board .hex .hex-top {
+.board .hex .hex-top ,
+.team-view .hex .hex-top
+{
     top: -25px;
     border-top: 4px solid #17313a;
     border-right: 4px solid #17313a
 }
 
-.board .hex .hex-top:after {
+.board .hex .hex-top:after,
+.team-view .hex .hex-top:after
+{
     background-position: top
 }
 
-.board .hex .hex-bottom {
+.board .hex .hex-bottom ,
+.team-view .hex .hex-bottom
+{
     bottom: -25px;
     border-bottom: 4px solid #17313a;
     border-left: 4px solid #17313a
 }
 
-.board .hex .hex-bottom:after {
+.board .hex .hex-bottom:after,
+.team-view .hex .hex-bottom:after
+{
     background-position: bottom
-}
-
-.board .hex .character-level {
-    opacity: 0;
-    color: #6497af;
-    position: absolute;
-    top: -25px;
-    left: 50%;
-    font-size: 20px;
-    transform: translateX(-50%);
-    width: 100%;
-    text-align: center;
-    letter-spacing: -3px;
-    margin-left: -1px;
-    text-shadow: 0 2px 5px #000, 0 2px 5px #000;
-    z-index: 10
 }
 
 .board .hex .character-level.active {
@@ -434,10 +487,42 @@
     }
 }
 
-.tierlist.teams .tier-group .characters-list .team-portrait .team-positioning #hexGrid.four-row .hex:nth-child(14n+8), .tierlist.teams .tier-group .characters-list .team-portrait .team-positioning #hexGrid.three-row .hex:nth-child(14n+1) {
-    margin-left: 6%
+.team-view.four-row .hex:nth-child(14n+8) {
+    margin-left: 12%
 }
 
-.board.four-row .hex:nth-child(14n+8) {
-    margin-left: 12%
+.team-view .board-full .builder-bonus.builder-board {
+    padding: 0
+}
+
+.team-view {
+    width: 100%
+}
+
+.team-view .hex {
+    width: 34px;
+    height: 20px;
+    margin: 10px 5px
+}
+
+.team-view .hex .hex-bottom, .team-view .hex .hex-top {
+    width: 24px;
+    height: 24px;
+    left: 2px
+}
+
+.team-view .hex .hex-top {
+    top: -12px
+}
+
+.team-view .hex .hex-bottom {
+    bottom: -12px
+}
+
+.team-view .board-full .drag-zone .characters-list.champions .characters-item {
+    width: 12.5%
+}
+
+.team-view .board-full .drag-zone .characters-list.items .characters-item {
+    width: 10%
 }

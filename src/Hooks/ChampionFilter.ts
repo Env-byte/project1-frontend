@@ -67,17 +67,31 @@ export const useChampionFilter = (tftSet: string): [FilterResponse, FilterDispat
                 filter.isSearch = false;
                 return {filter: filter, champions: applyFilter(filter, setData.getChampions())};
             case 'search':
-                if (!action.search) {
+                if (action.search === undefined) {
                     return state;
                 }
-                filter = {
-                    isSearch: true,
-                    cost: searchCost(action.search),
-                    ...searchTraits(action.search, setData.getTraits())
+                if (action.search === '') {
+                    filter = defaultFilter
+                } else {
+                    filter = {
+                        isSearch: true,
+                        cost: searchCost(action.search),
+                        ...searchTraits(action.search, setData.getTraits())
+                    }
                 }
+                //check if there is a valid filter
+                const isFilter = filter.origin.length !== 0 || filter.class.length !== 0 || filter.cost.length !== 0;
+
+                //only show filtered champions if search is set with cost or origin or class
+                const filteredChampions = (action.search !== '' && isFilter) ? applyFilter(filter, setData.getChampions()) : [];
+
+                const searchedChampions = searchChampion(action.search, setData.getChampions());
+                //merge filtered and searched champion removing all duplicates
+                const champions = filteredChampions.filter(champion => !searchedChampions.includes(champion)).concat(searchedChampions)
+
                 return {
                     filter: filter,
-                    champions: applyFilter(filter, searchChampion(action.search, setData.getChampions())),
+                    champions: champions,
                 };
             case'reset':
                 return {
@@ -136,7 +150,13 @@ const applyFilter = (filter: ChampionFilter, champions: Champion[]): Champion[] 
             if (filter.class.length > 0 || filter.origin.length > 0) {
                 const classes = champion.traits.filter((trait) => filter.class.find((classItem) => trait === classItem))
                 const origins = champion.traits.filter((trait) => filter.origin.find((originItem) => trait === originItem))
-                show = !((origins.length === 0 && filter.origin.length > 0) || (filter.class.length > 0 && classes.length === 0));
+                if (filter.isSearch) {
+                    // show champions with any of the origins / classes
+                    show = !(origins.length === 0 && filter.origin.length > 0) || !(filter.class.length > 0 && classes.length === 0);
+                } else {
+                    //only show champions with the exact origin class combo
+                    show = !((origins.length === 0 && filter.origin.length > 0) || (filter.class.length > 0 && classes.length === 0));
+                }
             }
             if (filter.cost.length !== 0) {
                 const condition = filter.cost.includes(champion.cost);

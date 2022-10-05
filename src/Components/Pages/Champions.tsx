@@ -6,7 +6,7 @@ import ChampionGrid from "../Champions/ChampionGrid";
 const Champions = () => {
     const {tftSet} = useTFTSet();
     const [filterRes, dispatches] = useChampionFilter(tftSet.id);
-    return <>
+    return <div className="container-fluid">
         <div className="row">
             <div className="col-lg-12">
                 <h3>Champions</h3>
@@ -24,7 +24,7 @@ const Champions = () => {
                 <ChampionGrid tftSet={tftSet.id} filterRes={filterRes} dispatches={dispatches}/>
             </div>
         </div>
-    </>
+    </div>
 }
 
 export default Champions;

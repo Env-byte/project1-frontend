@@ -36,3 +36,8 @@ export const useStaticDataSet = (tftSet: string) => {
         return staticData[tftSet];
     }, [staticData, tftSet]);
 }
+
+export const useStaticDataSets = () => {
+    const {staticData} = useStaticData();
+    return staticData;
+}

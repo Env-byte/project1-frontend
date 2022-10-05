@@ -1,20 +1,26 @@
 import {ToastError} from "./SwalMixin";
 
-interface ErrorWrapper {
+type ErrorType = 'Access Denied' | 'Not Found' | 'Internal Server Error'
+
+export interface ErrorWrapper {
     message: string
-    code: number
+    type: ErrorType
 }
 
 export default class ErrorHandler {
-    public static Catch(error: any) {
+    public static Catch(error: any): ErrorWrapper {
         console.error(error)
+        let errorWrapper: ErrorWrapper = {message: "", type: 'Internal Server Error'}
         try {
-            const errorWrapper: ErrorWrapper = JSON.parse(error as string) as ErrorWrapper;
+            errorWrapper = JSON.parse(error as string) as ErrorWrapper;
             console.log('errorWrapper', errorWrapper)
             ToastError.fire(errorWrapper.message);
         } catch (e) {
+            console.log('ErrorHandler.Catch', error);
+            errorWrapper.message = "Server Error";
+            errorWrapper.type = "Internal Server Error"
             ToastError.fire('Server Error');
         }
-        console.log('ErrorHandler.Catch', error);
+        return errorWrapper;
     }
 }

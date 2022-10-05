@@ -25,15 +25,16 @@ const ChampionFilters = (props: ChampionFiltersProps) => {
     const [classCheckbox, setClassCheckbox] = useState<JSX.Element[]>([]);
     const [costCheckbox, setCostCheckbox] = useState<JSX.Element[]>([]);
 
-    const handleChange = (event: ChangeEvent<HTMLInputElement>, type: string, val: number | string) => {
-        if (event.currentTarget.checked) {
-            props.dispatches.add(type, val);
-        } else {
-            props.dispatches.remove(type, val);
-        }
-    }
+
 
     useEffect(() => {
+        const handleChange = (event: ChangeEvent<HTMLInputElement>, type: string, val: number | string) => {
+            if (event.currentTarget.checked) {
+                props.dispatches.add(type, val);
+            } else {
+                props.dispatches.remove(type, val);
+            }
+        }
         setOriginCheckbox(origins.map(item => {
             const found = props.filter.origin.includes(item.name);
             return <FilterCheckbox key={item.name}
