@@ -6,8 +6,8 @@ import StaticHelpers from "../../Classes/StaticHelpers";
 
 interface HexProps {
     position: number,
-    add: TeamAdd,
-    remove: TeamRemove,
+    add?: TeamAdd,
+    remove?: TeamRemove,
     champion?: Champion
     setId: string
 }
@@ -33,15 +33,17 @@ const Hex = (props: HexProps) => {
             drop: (item) => {
                 const champion = item as Champion;
                 champion.items = []
-                props.add(champion, props.position)
-                return {name: `Hex ${props.position}`} as DropResult
+                if (props.add !== undefined) {
+                    props.add(champion, props.position)
+                    return {name: `Hex ${props.position}`} as DropResult
+                }
             },
             collect: (monitor: any) => ({
                 isOver: monitor.isOver(),
                 canDrop: monitor.canDrop(),
             }),
             canDrop: () => {
-                return !props.champion;
+                return !props.champion && props.add !== undefined;
             },
         }),
         [props.champion],

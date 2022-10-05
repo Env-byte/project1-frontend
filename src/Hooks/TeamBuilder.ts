@@ -55,7 +55,7 @@ const reducer = (state: Team, action: Action) => {
             if (action.name) {
                 newName = action.name;
             }
-            if (action.isPublic) {
+            if (action.isPublic !== undefined) {
                 isPublic = action.isPublic;
             }
             return {...state, name: newName, isPublic: isPublic}

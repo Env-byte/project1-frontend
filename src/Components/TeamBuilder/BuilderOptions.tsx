@@ -47,7 +47,6 @@ const BuilderOptions = (props: BuilderOptionsProps) => {
                     navigate("/teams/builder/" + encodeURIComponent(guuid), {replace: true});
                 }, formName, formIsPublic)
             } else {
-                console.log('here')
                 props.saveOptionsDispatch(formName, formIsPublic);
             }
         } else {

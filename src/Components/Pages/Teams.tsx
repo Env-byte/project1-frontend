@@ -42,13 +42,13 @@ const Teams = () => {
                         }}
                         className="mb-3">
                         <Tab eventKey="public" title="Public Teams">
-                            <TeamList teams={publicTeams}/>
+                            <TeamList teams={publicTeams} canEdit={false}/>
                         </Tab>
                         <Tab eventKey="user" title="My Teams">
-                            <TeamList teams={userTeams}/>
+                            <TeamList teams={userTeams} canEdit={true}/>
                         </Tab>
                     </Tabs>
-                ) : <></>}
+                ) : <TeamList teams={publicTeams} canEdit={false}/>}
 
     </div>;
 }
